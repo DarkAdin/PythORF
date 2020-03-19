@@ -1,7 +1,7 @@
 # Sequencetool
 A little, simple, humble Python algorithm that finds all possible Open Reading Frames within a given DNA sequence, and finds some arbitrary targets.
 
-This algorithm tries to emulate the results and reliability of the ORF Finder from NCBI, while avoiding the use of any Python module to keep it clean and self-reliant. It should be noticeably fast on any regular sequence and the CPU shouldn't even sweat, although it'd be advisable to avoid very large sequences (more than 100.000 bp).
+This algorithm tries to emulate the results and reliability of the ORF Finder from NCBI, while avoiding the use of any Python module to keep it clean and self-reliant. It should be noticeably fast on any regular sequence and the CPU shouldn't even sweat, although it'd be advisable to avoid very large sequences (more than 100 kb).
 
 ## Functionalities
 
