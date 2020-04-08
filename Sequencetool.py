@@ -1,32 +1,31 @@
 try:
-    DNA=list(open(input('Insert exact filename of DNA sequence to be read: '),'r').read()) #DNA is read from a specific file. User is prompted to type the exact filename of the sequence. FASTA format is not supported yet, since there needs to be a way of dealing with the first line that contains the metadata of the sequence. It will be implemented in time.
-except: #If for some reason the file is invalid, doesn't exist or the path to it is not correct, display an error and exit.
-    print('Invalid file/path. Exiting.')
-    exit()
+    DNA=list(open(input('Insert exact filename of DNA sequence to be read: '),'r').read()) #DNA is read from a specific file. User is prompted to type the exact filename of the sequence, which must be in the same directory. FASTA format is not supported yet, since there needs to be a way of dealing with the first line that contains the metadata of the sequence. It will be implemented in time!
+except: #If for some reason the file is invalid or its name is not correct, display an error message and exit.
+    print('Invalid file. Exiting.')
+    exit(1)
 for a in [' ', '\t', '\n', '>']: #List of unwanted characters
     while a in DNA:
         DNA.remove(a) #Cleaning up the sequence
 print('The DNA sequence is', len(DNA), 'bp long.')
-Startpos=input('Start position (or leave blank): ') #The user is prompted to decide, if they want to, the start and end positions within the DNA sequence. The default option, of course, is scanning the entire DNA sequence.
-Endpos=input('End position (or leave blank): ')
 try:
-    int(Startpos)
+    Startpos=int(input('Start position (default: 0): ')) #User is prompted to input start and end positions. Incorrect values are defaulted to the actual start and end of the complete sequence.
+    if Startpos not in range(len(DNA)-1):
+        print('Start position out of range. Defaulting to 0.')
+        Startpos = 0
 except:
     Startpos=0
 try:
-    int(Endpos)
+    print('Default end position:', len(DNA)-1)
+    Endpos=int(input('End position: '))
+    if Endpos not in range(len(DNA)-1):
+        print('End position out of range. Defaulting to', len(DNA)-1,'.')
+        Endpos=len(DNA)-1
 except:
     Endpos=len(DNA)-1
-if int(Startpos) not in range(len(DNA)): #If the user leaves them blank or inputs an invalid value outside the range of the DNA itself, they are defaulted to the start and end of the molecule, respectively.
-    Startpos=0
-if Endpos < Startpos or Endpos not in range(len(DNA)-1):
-    Endpos=len(DNA)-1
-DNA=DNA[int(Startpos):int(Endpos)] #Whether the user inputs correct values or not, the sequence is set to be read in the decided range.
-print('Selected DNA between positions:', Startpos,'-', Endpos, '. Selected DNA sequence now is', len(DNA), 'bp long.')
+DNA=DNA[Startpos:Endpos] #Whether the user inputs correct values or not, the sequence is set to be read in the decided range.
+print('Selected DNA between positions:', Startpos,'-', Endpos, '. Selected DNA sequence is', len(DNA), 'bp long.')
 print('75 pb means peptides at least 25 aminoacids long (default: 75 bp).')
-ORFlength=input('Minimal length of ORF? (pb) ')
-if ORFlength is not int: #If the user inserts anything other than an int, ORF length is defaulted to 75 bp
-        ORFlength=75
+ORFlength=int(input('Minimal length of ORF? (pb) '))
 #Dictionaries for: creating a complementary DNA; transcribing the DNA; translating the RNA
 Compl = {
         "A":"T",
@@ -105,7 +104,7 @@ Translation = {
         "GGC":"G",
         "GGA":"G",
         "GGG":"G",
-        } #Dictionary that contains the 'universal' genetic code to help translate every RNA into its corresponding protein
+        } #Dictionary of triplets that contains the 'universal' genetic code to help translate every RNA into its corresponding protein
 ORFs=0
 for i in range(3):
     print('Frame +',i+1,':')
@@ -115,7 +114,7 @@ for i in range(3):
     for ribo in [Transcription[Nuc] for Nuc in [Compl[D] for D in DNA][i:]]: #First, the DNA is turned into its complementary version. It is transcribed to RNA right after
         Count+=1
         Codon.append(ribo)
-        if Count==3: #Ensuring that the codon is exactly 3 ribonucleotids long
+        if Count==3: #Making sure the codon is exactly 3 ribonucleotids long before translating it.
             Count-=3 #Resetting the counter. I feel unconfortable about these counters, but for now I can't seem to find an alternative...
             Protein.append(Translation[''.join(Codon)]) #Every codon is translated right before appending its corresponding aminoacid to the nascent protein
             del Codon[:] #Resetting the codon
@@ -126,7 +125,7 @@ for i in range(3):
                 ORFs+=1
             #Protein.remove('M') #Once the ORF has been shown, remove its beginning and end but not the section in between, which may contain more ORFs ('nested').
             #Protein.remove('*')
-            del Protein[Protein.index('M'):Protein.index('*')] #This setting deactivates the search for nested ORFs. Comment it and uncomment the two lines above to obtain nested ORFs. The search for nested ORFs is turned off by default in NCBI's ORF Finder as well. Activating it means obtaining a greater number of ORFs.
+            del Protein[Protein.index('M'):Protein.index('*')] #This setting deactivates the search for nested ORFs. Comment it and uncomment the two lines above to obtain nested ORFs. The search for nested ORFs is turned off by default in NCBI's ORF Finder as well. Activating it means obtaining a greater number of ORFs than otherwise.
         else:
             Protein.remove('*') #Removal of stop codons that might come before any Methionin, interrupting the reading of any ORF.
 for i in range(3):
@@ -134,7 +133,7 @@ for i in range(3):
     Count=0
     Codon=[]
     Protein=[]
-    for ribo in [Transcription[Nuc] for Nuc in DNA[-i-1::-1]]: #DNA is read backwards in all 3 remaining frames, and the rest of the process is exactly the same as above.
+    for ribo in [Transcription[Nuc] for Nuc in DNA[-i-1::-1]]: #DNA is read backwards in all 3 remaining frames, and the rest of the process is exactly the same as the one above.
         Count+=1
         Codon.append(ribo)
         if Count==3:
@@ -152,13 +151,14 @@ for i in range(3):
         else:
             Protein.remove('*')
 print(ORFs, 'ORFs found.')
-input('Press any key to find genomic targets... ')
+if input('Find genomic targets (yes/no)? ') in ['No','no','NO','N','n']:
+    exit()
 #########
 # TARGETS
 #########
 def Targets(DNA): #Putting all this in a function to allow the user calling it in future versions, since it is an optional tool and should only prompt when the user chooses.
     Count=0
-    Targets=['ATG','CGGCGG','GCCGCC']
+    Targets=['ATG','CGGCGG','GCCGCC'] #List of targets to search for.
     for Target in Targets:
         print('Targets found for ', ''.join(Target),':')
         Ind=0
