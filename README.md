@@ -22,8 +22,8 @@ Since it's a common tool in genomics, there's also an option to find every possi
 
 ### Sample sequences
 The repository includes two sample sequences in *txt* format:
-* Human Interferon - gamma.
-*
+* Human Interferon - gamma (IFNG).
+* Natriuretic Peptide A (NPPA).
 
 ## Purpose
 The main purpose of this algorithm is to bring some of the most common tools both to unexperienced and experienced students and academics in the field of Molecular Biology and Genomics, without having to depend on some website, third party organization, licensed application or bloated libraries. The massive use of licensed applications plagues the entire academic field and personally is something I'd have loved to avoid. Everyone knows that most software these days suffers from a serious lack of art in their design.
