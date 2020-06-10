@@ -179,7 +179,7 @@ try:
     Sequence=list(open(input('Insert exact filename of DNA sequence to be read: '),'r').read()) #DNA is read from a specific file. User is prompted to type the exact filename of the sequence, which must be in the same directory. FASTA format is not supported yet, since there needs to be a way of dealing with the first line that contains the metadata of the sequence. It will be included in time!
 except: #If for some reason the file is invalid or its name is not correct, display an error message and exit.
     print('Invalid file. Exiting.')
-    exit()
+    exit(1)
 for a in [' ', '\t', '\n', '>']: #List of typical unwanted characters
     while a in Sequence:
         Sequence.remove(a) #Cleaning up the sequence
@@ -187,8 +187,8 @@ print('The DNA sequence is', len(Sequence), 'bp long.')
 for a in Sequence:
     if a not in ['A','T','C','G']: #After removing newlines, tabs, spaces and such, the sequence is scanned in search of invalid characters. If so, the program exits.
         print('The sequence contains invalid characters. Exiting.')
-        exit()
+        exit(1)
 ORFinder(Sequence) #Calling the main ORF Finder function on the specified sequence.
 if input('Find genomic targets (yes/no)? ') in ['No','no','NO','N','n']: #Allowing exiting without finding targets
-    exit()
+    exit(0)
 Targets(Sequence)
