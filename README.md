@@ -42,7 +42,6 @@ This little tool is far from finished, far from polished. Things to be added:
 * Include a system to rate every possible peptide and present the most probable ones, given the context of translation start and ending sites at the mRNA. Perhaps include Shine-Dalgarno sites, and options for alternative poli-adenilation and termination.
 * Include a tool to design primers for the amplification of the sequence if possible. Again, the user here should have the last word on deciding the primers best suited for their needs.
 * Make cleaner, even more direct code. Focusing on minimal memory usage, the algorithm should be as efficient as possible, without a single variable, a single list, declared in vain. Every new tool should be prompted to be used in the form of a function and not entered by default; the user should query the tasks first, and their order should be easily set. This makes the program modular and introduces intentional pauses so the CPU usage is not as intensive.
-* Include the positions of the current ORF within the DNA sequence.
 * Allow writing the output into a log file to be further processed.
 * Perhaps make it Ncurses-compatible, allowing for a pseudo-graphical interface within the terminal.
 * And more...
