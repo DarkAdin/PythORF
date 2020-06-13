@@ -117,7 +117,7 @@ def ORFinder(DNA):
         while 'M' in Protein and '*' in Protein: #Making sure the protein contains methionins and stops. As long as this simple condition is met, ORFs will be scanned.
             if Protein.index('M') < Protein.index('*'):
                 if len(Protein[Protein.index('M'):Protein.index('*')])>int(ORFlength)/3: #The chosen minimal ORF Length finally comes into play. The length of all ORFs must obey its exact value, or higher. Otherwise they are not considered.
-                    print(3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')])) #The ORF itself! Not more than the two same indexes manipulated in different ways: the index for 'M' and the index for '*', meaning Methionins and stops.
+                    print('ORF', ORFs, ': Position:', 3*(Protein.index('M'))+Startpos, '-', 3*(Protein.index('*'))+3+Startpos, ':', 3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')])) #The ORF itself! Not more than the two same indexes manipulated in different ways: the index for 'M' and the index for '*', meaning Methionins and stops.
                     ORFs+=1
                 #Protein.remove('M') #Once the ORF has been shown, remove its beginning and end but not the section in between, which may contain more ORFs ('nested').
                 #Protein.remove('*')
@@ -139,7 +139,7 @@ def ORFinder(DNA):
         while 'M' in Protein and '*' in Protein:
             if Protein.index('M') < Protein.index('*'):
                 if len(Protein[Protein.index('M'):Protein.index('*')])>int(ORFlength)/3:
-                    print(3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')]))
+                    print('ORF', ORFs, ': Position:', 3*(Protein.index('M'))+Startpos, '-', 3*(Protein.index('*'))+3+Startpos, ':', 3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')]))
                     ORFs+=1
                 #Protein.remove('M')
                 #Protein.remove('*')
@@ -171,6 +171,7 @@ def Targets(DNA):
                 print(Ind-len(list(Target)), '-', ''.join(Target), '-', Ind)
         print(Hits,''.join(Target), 'targets found.')
         print('--------------')
+    return 0
 
 ########################
 # PREPARING THE SEQUENCE
