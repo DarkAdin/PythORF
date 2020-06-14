@@ -18,7 +18,7 @@ def ORFinder(DNA):
     except:
         Endpos=len(DNA)-1
     print('Selected DNA between positions:', Startpos,'-', Endpos,'. Selected DNA sequence is', len(DNA[Startpos:Endpos]), 'bp long.') #Whether the user inputs correct values or not, the sequence is set to be read in the decided range.
-    print('75 pb means peptides at least 25 aminoacids long (default: 75 bp).')
+    print('75 pb means peptides at least 25 aminoacids long. Default: 75 pb.')
     try:
         ORFlength=int(input('Minimal length of ORF? (pb) '))
     except:
@@ -181,6 +181,10 @@ try:
 except: #If for some reason the file is invalid or its name is not correct, display an error message and exit.
     print('Invalid file. Exiting.')
     exit(1)
+if '>' == Sequence[0]:
+    print("FASTA format detected. Stripping first line as name:")
+    print(''.join(Sequence[Sequence.index('>'):Sequence.index('\n')])) #The program assumes that the sequence's name is placed between the first '>' character and the next newline, typical of FASTA files. Prints it once on screen, deletes it from the sequence, and leaves the rest intact to be further processed.
+    del Sequence[Sequence.index('>'):Sequence.index('\n')]
 for a in [' ', '\t', '\n', '>']: #List of typical unwanted characters
     while a in Sequence:
         Sequence.remove(a) #Cleaning up the sequence
