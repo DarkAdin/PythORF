@@ -21,9 +21,10 @@ The loop goes on until all 6 frames are finished. Empty frames are not ignored a
 Since it's a common tool in genomics, there's also an option to find every possible genomic target on the DNA sequence from an easily modifiable arbitrary list. The entire DNA sequence is scanned and every target printed on screen in another 'for' loop along with its exact position within it.
 
 ### Sample sequences
-The repository includes two sample sequences in *txt* format:
+The repository includes three sample sequences in *txt* format:
 * Human Interferon - gamma (IFNG).
 * Natriuretic Peptide A (NPPA).
+* Angiotensin-converting enzyme 2 (ACE2).
 
 ## Purpose
 The main goal of this algorithm is to bring some of the most common tools both to unexperienced and experienced students and academics in the field of Molecular Biology and Genomics, without having to depend on some website, third party organization, licensed application or bloated libraries. The massive use of licensed applications plagues the entire academic field and personally is something I'd have loved to avoid. Everyone knows that most software these days suffers from a serious lack of art in their design.
