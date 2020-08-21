@@ -1,9 +1,9 @@
-############
-# ORF FINDER
-############
+##########################
+# MAIN ORF FINDER FUNCTION
+##########################
 def ORFinder(DNA):
     try:
-        Startpos=int(input('Desired start position (default: 0): ')) #User is prompted to input start and end positions. Incorrect values are defaulted to the actual start and end of the complete sequence.
+        Startpos=int(input('Desired start position (default: 0): '))
         if Startpos not in range(len(DNA)-1):
             print('Start position out of range. Defaulting to 0.')
             Startpos = 0
@@ -17,7 +17,7 @@ def ORFinder(DNA):
             Endpos=len(DNA)-1
     except:
         Endpos=len(DNA)-1
-    print('Selected DNA between positions:', Startpos,'-', Endpos,'. Selected DNA sequence is', len(DNA[Startpos:Endpos]), 'bp long.') #Whether the user inputs correct values or not, the sequence is set to be read in the decided range.
+    print('Selected DNA between positions:', Startpos,'-', Endpos,'. Selected DNA sequence is', len(DNA[Startpos:Endpos]), 'bp long.')
     print('75 pb means peptides at least 25 aminoacids long. Default: 75 pb.')
     try:
         ORFlength=int(input('Minimal length of ORF? (pb) '))
@@ -28,13 +28,13 @@ def ORFinder(DNA):
             "T":"A",
             "C":"G",
             "G":"C",
-            } #Dictionary to create a complementary DNA strand
+            }
     Transcription = {
             "A":"U",
             "C":"G",
             "G":"C",
             "T":"A",
-            } #Dictionary to transcribe the DNA
+            }
     Translation = {
             "UUU":"F",
             "UUC":"F",
@@ -100,97 +100,97 @@ def ORFinder(DNA):
             "GGC":"G",
             "GGA":"G",
             "GGG":"G",
-            } #Dictionary of triplets that contains the 'universal' genetic code to help translate every RNA into its corresponding protein
-    ORFs=0 #Total number of ORFs counted
+            }
+    ORFs=0
     for i in range(3):
         print('Frame +',i+1,':')
         Codon=[]
         Protein=[]
-        for ribo in [Transcription[Nuc] for Nuc in [Compl[D] for D in DNA[Startpos:Endpos]][i:]]: #First, the DNA is turned into its complementary version. It is transcribed to RNA right after by passing each nucleotide through the dictionary for transcription. The DNA is indexed beginning from the 'i' position, being i 0, 1 or 2. After that indexing, which variates the starting position by one nucleotide each time, the DNA is passed through the Compl dictionary to obtain its complementary strand. After that, said complementary strand is passed through the Transcription dictionary to obtain the RNA. Perhaps in the future I might open this a little more for the sake of readability.
-            Codon.append(ribo)
-            if len(Codon)==3: #Making sure the codon is exactly 3 ribonucleotides long before translating it.
-                Protein.append(Translation[''.join(Codon)]) #Every codon is translated right before appending its corresponding aminoacid to the nascent protein.
-                del Codon[:] #Resetting the codon. The variable is not re-initialized, only emptied.
-        while 'M' in Protein and '*' in Protein: #Making sure the protein contains methionins and stops. As long as this simple condition is met, ORFs will be scanned.
-            if Protein.index('M') < Protein.index('*'):
-                if len(Protein[Protein.index('M'):Protein.index('*')])>int(ORFlength)/3: #The chosen minimal ORF Length finally comes into play. The length of all ORFs must obey its exact value, or higher. Otherwise they are not considered.
-                    ORFs+=1
-                    print('ORF', ORFs, ':', 3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')])) #The ORF itself! Not more than the two same indexes manipulated in different ways: the index for 'M' and the index for '*', meaning Methionins and stops.
-                #Protein.remove('M') #Once the ORF has been shown, remove its beginning and end but not the section in between, which may contain more ORFs
-                #Protein.remove('*')
-                del Protein[Protein.index('M'):Protein.index('*')]
-            else:
-                Protein.remove('*') #Removal of stop codons that might come before any Methionin, interrupting the reading.
-    for i in range(3):
-        print('Frame -',i+1,':')
-        Codon=[]
-        Protein=[]
-        for ribo in [Transcription[Nuc] for Nuc in DNA[Startpos:Endpos][-i-1::-1]]: #DNA is read backwards in all 3 remaining frames, and the rest of the process is exactly the same as the one above.
+        for ribo in [Transcription[Nuc] for Nuc in [Compl[D] for D in DNA[Startpos:Endpos]][i:]]:
             Codon.append(ribo)
             if len(Codon)==3:
                 Protein.append(Translation[''.join(Codon)])
                 del Codon[:]
+        # Some ORFs take up the entire sequence, with no stop codons and just one start codon. These next 4 lines allow for detecting them easily.
+        if 'M' in Protein and '*' not in Protein:
+            ORFs+=1
+            print('ORF', ORFs, ':', 3*(len(Protein[Protein.index('M'):]))+3, 'nts |', len(Protein[Protein.index('M'):]), 'aas:', ''.join(Protein[Protein.index('M'):]))
+            del Protein[Protein.index('M'):]
         while 'M' in Protein and '*' in Protein:
             if Protein.index('M') < Protein.index('*'):
                 if len(Protein[Protein.index('M'):Protein.index('*')])>int(ORFlength)/3:
                     ORFs+=1
                     print('ORF', ORFs, ':', 3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')]))
-                #Protein.remove('M')
-                #Protein.remove('*')
+                del Protein[Protein.index('M'):Protein.index('*')]
+            else:
+                Protein.remove('*')
+    for i in range(3):
+        print('Frame -',i+1,':')
+        Codon=[]
+        Protein=[]
+        for ribo in [Transcription[Nuc] for Nuc in DNA[Startpos:Endpos][-i-1::-1]]:
+            Codon.append(ribo)
+            if len(Codon)==3:
+                Protein.append(Translation[''.join(Codon)])
+                del Codon[:]
+        if 'M' in Protein and '*' not in Protein:
+            ORFs+=1
+            print('ORF', ORFs, ':', 3*(len(Protein[Protein.index('M'):]))+3, 'nts |', len(Protein[Protein.index('M'):]), 'aas:', ''.join(Protein[Protein.index('M'):]))
+            del Protein[Protein.index('M'):]
+        while 'M' in Protein and '*' in Protein:
+            if Protein.index('M') < Protein.index('*'):
+                if len(Protein[Protein.index('M'):Protein.index('*')])>int(ORFlength)/3:
+                    ORFs+=1
+                    print('ORF', ORFs, ':', 3*(len(Protein[Protein.index('M'):Protein.index('*')]))+3, 'nts |', len(Protein[Protein.index('M'):Protein.index('*')]), 'aas:', ''.join(Protein[Protein.index('M'):Protein.index('*')]))
                 del Protein[Protein.index('M'):Protein.index('*')]
             else:
                 Protein.remove('*')
     print(ORFs, 'ORFs were found.')
     return 0
-#########
-# TARGETS
-#########
+###########################
+# TARGET-FINDING FUNCTION
+###########################
 def Targets(DNA):
     Count=0
-    Targets=['ATG','CGGCGG','GCCGCC'] #List of targets to search for. It would be nice to make the user input all desired targets and do the search once they are done.
+    Targets=['ATG','CGGCGG','GCCGCC']
     for Target in Targets:
         print('Targets found for', Target,':')
-        Ind=0 #Represents the index of the last position
+        Ind=0
         Hits=0
         for Nucl in DNA:
-            if Nucl == list(Target)[Count]: #If the nucleotide in the sequence matches a nucleotide in the target. Each step in the loop checks the next nucleotide both in the sequence and the target.
+            if Nucl == list(Target)[Count]:
                 Count+=1
                 Ind+=1
-            else: #No matter if the previous nucleotides match, if one of them doesn't, then the homology is not complete and the target should not be considered.
+            else:
                 Count-=Count
                 Ind+=1
             if Count== len(list(Target)):
                 Count-=Count
                 Hits+=1
-                print(Ind-len(list(Target)), '-', ''.join(Target), '-', Ind)
+                print(Ind-len(list(Target))+1, '-', ''.join(Target), '-', Ind)
         print(Hits,''.join(Target), 'targets found.')
         print('--------------')
     return 0
-
-#####################################################
-# PREPARING THE SEQUENCE AND CALLING OF THE FUNCTIONS
-#####################################################
+######################################################
+# INITIAL LOADING AND PROCESSING OF THE FILE SEQUENCE
+######################################################
 try:
-    Sequence=list(open(input('Insert exact filename of DNA sequence to be read: '),'r').read()) #DNA is read from a specific text file. User is prompted to type the exact filename of the sequence, which must be in the same directory.
-except: #If for some reason the file is invalid or its name is not correct, display an error message and exit.
+    Sequence=list(open(input('Insert exact filename of DNA sequence to be read: '),'r').read())
+except:
     print('Invalid file/name. Exiting.')
     exit(1)
 if '>' == Sequence[0]:
-    print("FASTA format detected. Stripping first line as name:")
-    print(''.join(Sequence[Sequence.index('>'):Sequence.index('\n')])) #The program assumes that the sequence's name is placed between the first '>' character and the next newline, typical of FASTA files. Prints it once on screen, deletes it from the sequence, and leaves the rest intact to be further processed.
+    print("FASTA format detected. Stripping first line as name: ", ''.join(Sequence[Sequence.index('>'):Sequence.index('\n')]))
     del Sequence[Sequence.index('>'):Sequence.index('\n')]
-for a in [' ', '\t', '\n']: #List of typical unwanted characters
+for a in [' ', '\t', '\n']:
     while a in Sequence:
-        Sequence.remove(a) #Cleaning up the sequence
+        Sequence.remove(a)
 print('The DNA sequence is', len(Sequence), 'bp long.')
 for a in Sequence:
-    if a not in ['A','T','C','G']: #After removing newlines, tabs, spaces and such, the sequence is scanned in search of invalid characters. If one is encountered, the program exits.
+    if a not in ['A','T','C','G']:
         print('The sequence contains invalid characters. Exiting.')
         exit(1)
-ORFinder(Sequence) #Calling the main ORF Finder function on the sequence specified by the user.
-if input('Find genomic targets (yes/no)? ') in ['No','no','NO','N','n']: #Allowing exiting without finding targets
+ORFinder(Sequence)
+if input('Find genomic targets (yes/no)? ') in ['No','no','NO','N','n']:
     exit(0)
 Targets(Sequence)
-#if input('Find genomic alignments (yes/no)? ') in ['No','no','NO','N','n']: #Allowing exiting without finding targets
-#    exit(0)
-#Alignment(Sequence)
