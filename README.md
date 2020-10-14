@@ -26,6 +26,9 @@ The repository includes three sample sequences in *txt* format:
 * Natriuretic Peptide A (NPPA).
 * Angiotensin-converting enzyme 2 (ACE2).
 
+### Writing into a log file
+Now the results are saved into a .log file. If the sequence lacks a FASTA line, it lets you choose the name for the file. Else it is named after the sequence itself.
+
 ## Purpose
 The main goal of this algorithm is to bring some of the most common tools both to unexperienced and experienced students and academics in the field of Molecular Biology and Genomics, without having to depend on some website, third party organization, licensed application or bloated libraries. The massive use of licensed applications plagues the entire academic field and personally is something I'd have loved to avoid some time ago. Everyone knows that most software these days suffers from a serious lack of art in their design and over-complexity.
 
@@ -46,8 +49,9 @@ This little tool is far from finished, far from polished. Things to be added:
 * Include a system to rate every possible peptide and present the most probable ones, given the context of translation start and ending sites at the mRNA. Perhaps include Shine-Dalgarno sites, and options for alternative poli-adenilation and termination. Not all ORFs are equally probable.
 * Include a tool to design primers for the amplification of the sequence if possible. Again, the user here should have the last word on deciding the primers best suited for their needs.
 * Make cleaner, even more direct code. Focusing on minimal memory usage, the algorithm should be as efficient as possible, without a single variable, a single list, declared in vain. Every new tool should be prompted to be used in the form of a function and not entered by default; the user should query the tasks first, and their order should be easily set. This makes the program modular and introduces intentional pauses so the CPU usage is not as intensive.
-* Allow writing the output into a log file to be further processed.
 * Perhaps make it Ncurses-compatible, allowing for a pseudo-graphical interface within the terminal.
+* Perhaps include some BioPython functionalities in order to analyze the peptidic sequence of the most probable Open Reading Frame.
+* Test the algorithm on as many sequences as possible.
 * And more...
 
 In order to add useful functionalities, this program could benefit from using certain, built-in Python libraries like **os** or **system**. This possibility will be explored in the future, always keeping in mind that simpler is better.
