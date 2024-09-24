@@ -29,14 +29,7 @@ The repository includes three sample sequences in *txt* format:
 ### Writing into a log file
 Now the results are saved into a .log file. If the sequence lacks a FASTA line, it lets you choose the name for the file. Else it is named after the sequence itself.
 
-## Purpose
-The main goal of this algorithm is to bring some of the most common tools both to unexperienced and experienced students and academics in the field of Molecular Biology and Genomics, without having to depend on some website, third party organization, licensed application or bloated libraries. The massive use of licensed applications plagues the entire academic field and personally is something I'd have loved to avoid some time ago. Everyone knows that most software these days suffers from a serious lack of art in their design and over-complexity.
-
-Also, Python is a great language.
-
 The user should actively modify the code to suit their needs. There are enough clarifications in the form of comments in the code itself, so they should be easy to find.
-
-Easy tasks are performed in the absence of additional libraries or modules because they are not needed. For example, I don't need to import a module just for parsing the sequence, when that can easily be done manually in a few lines. Libraries for everything create a false sense of control, and here we aim for true control. This makes the code easily modifiable in any part. All the capabilities of this program come directly from the code itself and nothing else.
 
 ## Usage
 Just clone this repository or just download the Python code itself and execute it on any sequence you want. It will guide you through all the steps and prompt to enter useful information. If left blank, the values are defaulted. The only thing needed is a text file which contains a DNA sequence with only the four possible characters A,G,C,T in it. FASTA format is supported. If the file contains tabs, spaces or newlines, they are properly deleted, so the file does not need to be just one line of text.
